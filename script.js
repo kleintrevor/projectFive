@@ -25,11 +25,11 @@ class Raven {
         this.image = new Image();
         this.image.src = 'raven.png';
         this.frame = 0;
-        this.maxFrame = 4;
+        this.maxFrame = 7;
         this.timeSinceFlap = 0;
         this.flapInterval = 100;
     }
-    update(){
+    update(deltatime){
         this.x -= this.directionX;
         if (this.x < 0 - this.width) this.markedForDeletion = true;
         this.timeSinceFlap += deltatime;
