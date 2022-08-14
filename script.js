@@ -25,22 +25,29 @@ class Raven {
         this.image = new Image();
         this.image.src = 'raven.png';
         this.frame = 0;
-        this.maxFrame = 7;
+        this.maxFrame = 4;
         this.timeSinceFlap = 0;
-        this.flapInterval = 100;
+        this.flapInterval = Math.random() * 50 + 50;;
     }
     update(deltatime){
+        if (this.y < 0 || this.y > canvas.height - this.height){
+            this.directionY = this.directionY * -1;  //causes enemies to bounce off top/bottom of the screen
+        }
         this.x -= this.directionX;
+        this.y += this.directionY; //allows for vertical movement
+
+        //removes extra ravens from the array once they leave the screen
         if (this.x < 0 - this.width) this.markedForDeletion = true;
         this.timeSinceFlap += deltatime;
         if (this.timeSinceFlap > this.flapInterval){
             if (this.frame > this.maxFrame) this.frame = 0;
-            else this.frame++;            
+            else this.frame++; 
+            this.timeSinceFlap = 0;           
         }
     }
     draw(){
         ctx.strokeRect(this.x, this.y, this.width, this.height);
-        ctx.drawImage(this.image, this.frame * this.spriteWidth, this.frame * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+        ctx.drawImage(this.image, this.frame * this.spriteWidth, this.frame, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
 }
 
@@ -58,7 +65,7 @@ function animate(timestamp){
     }
     [...ravens].forEach(object => object.update(deltatime));
     [...ravens].forEach(object => object.draw());
-    ravens =  ravens.filter(object  => !object.markedForDeletion);
+    ravens =  ravens.filter(object  => !object.markedForDeletion); // removes extra ravens from the array to prevent lagging
     requestAnimationFrame(animate);
 }
 animate(0);
