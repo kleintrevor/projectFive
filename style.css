@@ -6,11 +6,15 @@ body {
 }
 
 canvas {
-    background: grey;
+    background: linear-gradient(to bottom, red, green, blue);
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+#collisionCanvas {
+    opacity: 0;
 }
 
