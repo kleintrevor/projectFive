@@ -23,8 +23,6 @@ class Raven {
         this.sizeModifier = Math.random() * 0.6 + 0.4;
         this.width = this.spriteWidth * this.sizeModifier;
         this.height = this.spriteHeight * this.sizeModifier;
-        this.width = 100;
-        this.height = 50;
         this.x = canvas.width;
         this.y = Math.random() * (canvas.height - this.height);
         this.directionX = Math.random() * 5 + 3;
@@ -85,6 +83,9 @@ function animate(timestamp){
     if (timeToNextRaven > ravenInterval){
         ravens.push(new Raven());
         timeToNextRaven = 0;
+        ravens.sort(function(a, b){
+            return (a.width - b.width);
+        });
     }
     drawScore();
     [...ravens].forEach(object => object.update(deltatime));
