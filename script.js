@@ -20,7 +20,7 @@ class Raven {
     constructor(){
         this.spriteWidth = 271;
         this.spriteHeight = 194;
-        this.sizeModifier = Math.random() * 0.6 + 0.4;
+        this.sizeModifier = Math.random() * 0.6 + 0.4; // allows sprites to be random sizes
         this.width = this.spriteWidth * this.sizeModifier;
         this.height = this.spriteHeight * this.sizeModifier;
         this.x = canvas.width;
@@ -55,8 +55,8 @@ class Raven {
         }
     }
     draw(){
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        collisionCtx.fillStyle = this.color;
+        collisionCtx.fillRect(this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.frame * this.spriteWidth, this.frame, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
 }
@@ -69,12 +69,20 @@ function drawScore(){
 }
 
 window.addEventListener('click', function(e){
-    const detectPixelColor = ctx.getImageData(e.x, e.y, 1, 1)
+    const detectPixelColor = collisionCtx.getImageData(e.x, e.y, 1, 1) // ignore black ravens and return only color for hit detection
     console.log(detectPixelColor)
+    const pc = detectPixelColor.data;
+    ravens.forEach(object => {
+        if (object.randomColors[0] === pc[0] && object.randomColors[1] === pc[1] && object.randomColors[2] === pc[2]){
+            object.markedForDeletion = true;
+            score++;
+        } // removes raven from the screen and increases score
+    })
 })
 
 function animate(timestamp){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    collisionCtx.clearRect(0, 0, canvas.width, canvas.height)
     let deltatime = timestamp - lastTime;
     lastTime = timestamp;
     timeToNextRaven += deltatime;
